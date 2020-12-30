@@ -1,4 +1,4 @@
-#! /usr/bin/python3
+#!/usr/bin/python3
 
 from sense_hat import SenseHat
 import datetime
@@ -7,7 +7,8 @@ import datetime
 import math
 import csv
 import requests
-                                                                                                        def compass_to_rgb(h, s=1, v=1):
+
+def compass_to_rgb(h, s=1, v=1):
     h = float(h)
     s = float(s)
     v = float(v)
@@ -38,10 +39,12 @@ def sensor_message():
     t = round(t, 1)
     p = round(p, 1)
     h = round(h, 1)
-                                                                                                            # Create the message
-    message = "Temp.: " + str(t) + " Pressure: " + str(p) + " Humidity: " + str(h)
-    
-def rainbow():
+
+    # Create the message
+    message = "Temperature: " + str(t) + " Pressure: " + str(p) + " Humidity: " + str(h)
+    return message
+  
+  def rainbow():
     R =  [255, 0, 0] # red
     O =  [255,127,0] # orange
     Y =  [255,255,0] # yellow
@@ -64,8 +67,7 @@ def rainbow():
     G,  GC, C,  BC, B,  BM, M,  RM,
     GC, C,  BC, B,  BM, M,  RM, R,
     C,  BC, B,  BM, M,  RM, R,  R
-    ]
-    return pixel_list
+    ]                                                                                                                                                                                                                  return pixel_list
 
 sense = SenseHat()
 sense.set_rotation(180)
@@ -87,15 +89,15 @@ background = compass_to_rgb(now.minute*6)
 sense.show_message(message, back_colour=background, scroll_speed=0.08)
 time.sleep(1)
 
-# second message is the sensor readings
-sense.show_message(sensor_message(), scroll_speed=0.06)
+# second message is the sensor readings                                                                                                                                                                            sense.show_message(sensor_message(), scroll_speed=0.08)
 
 # conclude the program with the LED array cleared
-sense.clear( (0,0,0) )
+sense.clear( (0,0,0))
 
+# The requests are sent to dweet.io and freeboard using the following code and saved to the csv file also. 
 while True:
     r = requests.post('https://dweet.io/dweet/for/weather_script?'+'Temperature=' + t + '&Humidity=' + h + '&Pressure=' + p )
     currentTime = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
     with open('weatherLog.csv', 'a') as file:
-        file.write(str("Temp:"+ " " + t + " " + "Humidity:" + " " +  h + " " + "Pressure:" + " " + p + " " + "Time:" + " " +  currentTime + " \n"))
+        file.write(str("Temperature: "+ " " + t + " " + "Humidity: " + " " +  h + " " + "Pressure: " + " " + p + " " + "Time:" + " " +  currentTime + " \n"))
     time.sleep (3)
